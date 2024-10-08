@@ -1,0 +1,99 @@
+-- Dropping tables if they exist to avoid conflicts
+DROP TABLE IF EXISTS OrderDetails;
+DROP TABLE IF EXISTS Shippings;
+DROP TABLE IF EXISTS Orders;
+DROP TABLE IF EXISTS Customers;
+DROP TABLE IF EXISTS IceCandies;
+DROP TABLE IF EXISTS Suppliers;
+
+-- Creating the Suppliers table
+CREATE TABLE Suppliers (
+    SupplierID INT PRIMARY KEY,
+    SupplierName VARCHAR(100),
+    ContactNumber VARCHAR(15)
+);
+
+-- Creating the IceCandies table
+CREATE TABLE IceCandies (
+    IceCandyID INT PRIMARY KEY,
+    IceCandyName VARCHAR(100),
+    Flavor VARCHAR(50),
+    SupplierID INT,
+    StockQuantity INT,
+    Price DECIMAL(10, 2),
+    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID)
+);
+
+-- Creating the Customers table
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    Email VARCHAR(100)
+);
+
+-- Creating the Orders table
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    OrderDate DATE,
+    TotalAmount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Creating the OrderDetails table
+CREATE TABLE OrderDetails (
+    OrderID INT,
+    IceCandyID INT,
+    Quantity INT,
+    Price DECIMAL(10, 2),
+    PRIMARY KEY (OrderID, IceCandyID),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (IceCandyID) REFERENCES IceCandies(IceCandyID)
+);
+
+-- Creating the Shippings table
+CREATE TABLE Shippings (
+    ShippingID INT PRIMARY KEY,
+    OrderID INT,
+    CustomerID INT,
+    ShippingDate DATE,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+
+
+
+-- Inserting records into the Suppliers table
+INSERT INTO Suppliers (SupplierID, SupplierName, ContactNumber) VALUES
+(1, 'DaJhings Creamy Ice Candy Main.', '09691636817'),
+(2, 'DaJhings Creamy Ice Candy', '09453740456');
+
+-- Inserting records into the IceCandies table
+INSERT INTO IceCandies (IceCandyID, IceCandyName, Flavor, SupplierID, StockQuantity, Price) VALUES
+(1, 'Choco Delight', 'Chocolate', 1, 50, 10),
+(2, 'Mango Mania', 'Mango', 2, 75, 10),
+(3, 'Avocado Blast', 'Avocado', 1, 100, 10), 
+(4, 'Melon Fresh', 'Melon', 2, 60, 10),       
+(5, 'Ube Yum', 'Ube', 1, 80, 10);             
+
+-- Inserting records into the Customers table
+INSERT INTO Customers (CustomerID, CustomerName, Email) VALUES
+(1, 'Leander Sison', 'Lsison@example.com'),
+(2, 'Marko Alamillo', 'Malamillo@example.com');
+
+-- Inserting records into the Orders table
+INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount) VALUES
+(1, 1, '2024-09-11', 30),
+(2, 2, '2024-09-11', 20);
+
+-- Inserting records into the OrderDetails table
+INSERT INTO OrderDetails (OrderID, IceCandyID, Quantity, Price) VALUES
+(1, 1, 2, 20),
+(1, 5, 1, 10),  
+(2, 2, 2, 20); 
+
+-- Inserting records into the Shippings table
+INSERT INTO Shippings (ShippingID, OrderID, CustomerID, ShippingDate) VALUES
+(1, 1, 1, '2024-09-11'),
+(2, 2, 2, '2024-09-11');
